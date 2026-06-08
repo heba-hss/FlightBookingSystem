@@ -7,6 +7,8 @@ import com.flightbooking.database.DatabaseManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class FlightGUI extends JFrame {
 
@@ -16,6 +18,7 @@ public class FlightGUI extends JFrame {
     private JTextField priceField;
 
     private JButton addButton;
+    private JButton viewButton;
 
     public FlightGUI() {
 
@@ -25,7 +28,7 @@ public class FlightGUI extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 2, 10, 10));
+        panel.setLayout(new GridLayout(6, 2, 10, 10));
 
         JLabel idLabel = new JLabel("Flight ID:");
         JLabel destinationLabel = new JLabel("Destination:");
@@ -38,6 +41,7 @@ public class FlightGUI extends JFrame {
         priceField = new JTextField();
 
         addButton = new JButton("Add Flight");
+        viewButton = new JButton("View Flights");
 
         panel.add(idLabel);
         panel.add(idField);
@@ -51,8 +55,44 @@ public class FlightGUI extends JFrame {
         panel.add(priceLabel);
         panel.add(priceField);
 
-        panel.add(new JLabel());
         panel.add(addButton);
+        panel.add(viewButton);
+        viewButton.addActionListener(e -> {
+
+            try {
+
+                Connection conn = DatabaseManager.connect();
+
+                String sql = "SELECT * FROM flights";
+
+                Statement stmt = conn.createStatement();
+
+                ResultSet rs = stmt.executeQuery(sql);
+
+                StringBuilder flights = new StringBuilder();
+
+                while (rs.next()) {
+
+                    flights.append("ID: ")
+                            .append(rs.getInt("flight_id"))
+                            .append(" | Destination: ")
+                            .append(rs.getString("destination"))
+                            .append(" | Time: ")
+                            .append(rs.getString("departure_time"))
+                            .append(" | Price: ")
+                            .append(rs.getDouble("price"))
+                            .append("\n");
+                }
+
+                JOptionPane.showMessageDialog(this,
+                        flights.toString());
+
+            } catch (SQLException ex) {
+
+                JOptionPane.showMessageDialog(this,
+                        "Error Loading Flights");
+            }
+        });
 
         add(panel);
 
