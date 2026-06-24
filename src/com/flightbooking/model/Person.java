@@ -1,5 +1,7 @@
 package com.flightbooking.model;
-
+/**
+ * Abstract class representing a person in the flight booking system.
+ */
 public abstract class Person {
     private String name;
     private String username;
@@ -37,6 +39,8 @@ public abstract class Person {
         this.password = password;
     }
 
-    // Abstract method
+    /**
+     * Displays information about the person.
+     */
     public abstract void displayInfo();
 }

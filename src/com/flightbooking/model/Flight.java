@@ -1,5 +1,8 @@
 package com.flightbooking.model;
 
+/**
+ * Represents a flight in the booking system.
+ */
 public class Flight {
 
     private int flightId;
@@ -7,7 +10,14 @@ public class Flight {
     private String departureTime;
     private double price;
 
-    // Constructor
+    /**
+     * Creates a flight object.
+     *
+     * @param flightId Flight ID
+     * @param destination Flight destination
+     * @param departureTime Flight departure time
+     * @param price Flight price
+     */
     public Flight(int flightId, String destination,
                   String departureTime, double price) {
 
@@ -51,7 +61,9 @@ public class Flight {
         this.price = price;
     }
 
-    // Display method
+    /**
+     * Displays flight information.
+     */
     public void displayFlightInfo() {
 
         System.out.println("Flight ID: " + flightId);

@@ -1,5 +1,8 @@
 package com.flightbooking.model;
 
+/**
+ * Represents a flight booking.
+ */
 public class Booking {
 
     private int bookingId;
@@ -40,7 +43,9 @@ public class Booking {
         this.flight = flight;
     }
 
-    // Display booking details
+    /**
+     * Displays booking information.
+     */
     public void displayBookingInfo() {
 
         System.out.println("Booking ID: " + bookingId);

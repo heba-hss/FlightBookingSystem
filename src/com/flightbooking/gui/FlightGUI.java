@@ -10,6 +10,13 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * Graphical user interface used for
+ * managing flight information.
+ *
+ * @author Heba Salem
+ * @version 1.0
+ */
 public class FlightGUI extends JFrame {
 
     private JTextField idField;
@@ -19,7 +26,11 @@ public class FlightGUI extends JFrame {
 
     private JButton addButton;
     private JButton viewButton;
-
+    private JTextField searchField;
+    private JButton searchButton;
+    /**
+     * Creates and displays the flight management window.
+     */
     public FlightGUI() {
 
         setTitle("Add Flight");
@@ -28,13 +39,14 @@ public class FlightGUI extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6, 2, 10, 10));
+        panel.setLayout(new GridLayout(7, 2, 10, 10));
 
         JLabel idLabel = new JLabel("Flight ID:");
         JLabel destinationLabel = new JLabel("Destination:");
         JLabel timeLabel = new JLabel("Departure Time:");
         JLabel priceLabel = new JLabel("Price:");
-
+        searchField = new JTextField();
+        searchButton = new JButton("Search Flight");
         idField = new JTextField();
         destinationField = new JTextField();
         timeField = new JTextField();
@@ -42,6 +54,7 @@ public class FlightGUI extends JFrame {
 
         addButton = new JButton("Add Flight");
         viewButton = new JButton("View Flights");
+
 
         panel.add(idLabel);
         panel.add(idField);
@@ -54,7 +67,10 @@ public class FlightGUI extends JFrame {
 
         panel.add(priceLabel);
         panel.add(priceField);
+        panel.add(new JLabel("Search Destination:"));
+        panel.add(searchField);
 
+        panel.add(searchButton);
         panel.add(addButton);
         panel.add(viewButton);
         viewButton.addActionListener(e -> {
@@ -95,7 +111,61 @@ public class FlightGUI extends JFrame {
         });
 
         add(panel);
+        searchButton.addActionListener(e -> {
 
+            try {
+
+                String destination =
+                        searchField.getText();
+
+                Connection conn =
+                        DatabaseManager.connect();
+
+                String sql =
+                        "SELECT * FROM flights "
+                                + "WHERE destination = ?";
+
+                PreparedStatement pstmt =
+                        conn.prepareStatement(sql);
+
+                pstmt.setString(1, destination);
+
+                ResultSet rs =
+                        pstmt.executeQuery();
+
+                StringBuilder result =
+                        new StringBuilder();
+
+                while (rs.next()) {
+
+                    result.append("Flight ID: ")
+                            .append(rs.getInt("flight_id"))
+                            .append("\nDestination: ")
+                            .append(rs.getString("destination"))
+                            .append("\nTime: ")
+                            .append(rs.getString("departure_time"))
+                            .append("\nPrice: ")
+                            .append(rs.getDouble("price"))
+                            .append("\n\n");
+                }
+
+                if (result.length() == 0) {
+
+                    JOptionPane.showMessageDialog(this,
+                            "No flights found");
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this,
+                            result.toString());
+                }
+
+            } catch (SQLException ex) {
+
+                JOptionPane.showMessageDialog(this,
+                        "Database Error");
+            }
+        });
         setVisible(true);
         addButton.addActionListener(e -> {
 
